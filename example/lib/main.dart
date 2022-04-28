@@ -36,8 +36,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
   final String title;
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -46,12 +46,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   //Create an instance of ScreenshotController
   ScreenshotController screenshotController = ScreenshotController();
-
-  @override
-  void initState() {
-    // if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 screenshotController
                     .capture(delay: Duration(milliseconds: 10))
                     .then((capturedImage) async {
-                  ShowCapturedWidget(context, capturedImage!);
+                  _showCapturedWidget(context, capturedImage!);
                 }).catchError((onError) {
                   print(onError);
                 });
@@ -119,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             context, Material(child: container)),
                         delay: Duration(seconds: 1))
                     .then((capturedImage) {
-                  ShowCapturedWidget(context, capturedImage);
+                  _showCapturedWidget(context, capturedImage);
                 });
               },
             ),
@@ -129,7 +123,13 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Future<dynamic> ShowCapturedWidget(
+  @override
+  void initState() {
+    // if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    super.initState();
+  }
+
+  Future<dynamic> _showCapturedWidget(
       BuildContext context, Uint8List capturedImage) {
     return showDialog(
       useSafeArea: false,
@@ -139,9 +139,8 @@ class _MyHomePageState extends State<MyHomePage> {
           title: Text("Captured widget screenshot"),
         ),
         body: Center(
-            child: capturedImage != null
-                ? Image.memory(capturedImage)
-                : Container()),
+          child: Image.memory(capturedImage),
+        ),
       ),
     );
   }
